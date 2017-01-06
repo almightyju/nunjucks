@@ -203,7 +203,7 @@ function markSafe(val) {
     }
 }
 
-function suppressValue(val, autoescape) {
+function doSuppressValue(val, autoescape) {
     val = (val !== undefined && val !== null) ? val : '';
 
     if(autoescape && !(val instanceof SafeString)) {
@@ -211,6 +211,15 @@ function suppressValue(val, autoescape) {
     }
 
     return val;
+}
+function suppressValue(val, autoescape) {
+    if(val instanceof Promise) {
+        return val.then(function(val) { 
+            return doSuppressValue(val, autoescape);
+        });
+    } else {
+        return doSuppressValue(val, autoescape);
+    }
 }
 
 function ensureDefined(val, lineno, colno) {

@@ -485,21 +485,30 @@ Template = Obj.extend({
             frame || new Frame(),
             runtime,
             function(err, res) {
-                if(err) {
-                    err = lib.prettifyError(_this.path, _this.env.opts.dev, err);
-                }
-
-                if(cb) {
-                    if(forceAsync) {
-                        callbackAsap(cb, err, res);
+                function doCb(err, res) {
+                    if(err) {
+                        err = lib.prettifyError(_this.path, _this.env.opts.dev, err);
+                    } 
+                    if(cb) {
+                        if(forceAsync) {
+                            callbackAsap(cb, err, res);
+                        }
+                        else {
+                            cb(err, res);
+                        }
                     }
                     else {
-                        cb(err, res);
+                        if(err) { throw err; }
+                        syncResult = res;
                     }
                 }
+
+                if(res && res instanceof Promise) {
+                    res.then(function(val) { doCb(null, val); })
+                       .catch(function(err) { doCb(err); });
+                } 
                 else {
-                    if(err) { throw err; }
-                    syncResult = res;
+                    doCb(err, res);
                 }
             }
         );
