@@ -860,7 +860,7 @@ var Compiler = Object.extend({
 
         var bufferId = this.tmpid();
         this.pushBufferId(bufferId);
-        this.emitLine(bufferId + ' = Promise.resolve("");')
+        this.emitLine(bufferId + ' = Promise.resolve("");');
 
         this.withScopedSyntax(function () {
           this.compile(node.body, frame);
@@ -1043,7 +1043,7 @@ var Compiler = Object.extend({
         var id2 = this.tmpid();
 
         this.emitLine(this.buffer + ' = ' + this.buffer + '.then(function(current) {');
-        this.emitLine('return new Promise(function(resolv, cb) {')      
+        this.emitLine('return new Promise(function(resolv, cb) {');    
         this.emit('env.getTemplate(');
         this._compileExpression(node.template, frame);
         this.emitLine(', false, '+this._templateName()+', ' + node.ignoreMissing + ', ' + this.makeCallback(id));
@@ -1089,7 +1089,7 @@ var Compiler = Object.extend({
                 }
             }
             else {
-                this.emitLine(this.buffer + ' = ' + this.buffer + '.then(function(currentVal) {')
+                this.emitLine(this.buffer + ' = ' + this.buffer + '.then(function(currentVal) {');
                 this.emitLine('return new Promise(function(resolv, reject) {');
                 this.emit('var child = runtime.suppressValue(');
                 if(this.throwOnUndefined) {
@@ -1104,7 +1104,7 @@ var Compiler = Object.extend({
                 this.emitLine('child.then(function(childStr) {');
                 this.emitLine('resolv(currentVal + childStr);');
                 this.emitLine('}).catch(reject);');
-                this.emitLine('} else { resolv(currentVal + child); }')
+                this.emitLine('} else { resolv(currentVal + child); }');
                 this.emitLine('});');
                 this.emitLine('});');
             }
