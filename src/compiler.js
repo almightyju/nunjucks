@@ -763,7 +763,10 @@ var Compiler = Object.extend({
             }
 
             this.compile(node.body, frame);
+            this.emitLine('output = output.then(function (currentVal) {');
             this.emitLine('next(' + i + (buf ? ',' + buf : '') + ');');
+            this.emitLine('return currentVal;');
+            this.emitLine('});')
 
             if(parallel) {
                 this.popBufferId();
